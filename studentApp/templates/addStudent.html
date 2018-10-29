@@ -1,0 +1,23 @@
+{% extends "masterPage.html" %}
+{% block contentHead %}
+    Add Student
+{% endblock %}
+{% block contentBody %}
+    <div class="row" style="background-color: mintcream">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h3> Add Student </h3>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <br>
+                <button class="btn btn-success" type="submit">Save</button>
+                <br><br>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+
+{% endblock %}

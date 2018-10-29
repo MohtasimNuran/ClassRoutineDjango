@@ -1,0 +1,55 @@
+{% extends "masterPage.html" %}
+{% block contentHead %}
+    Course Assign
+{% endblock %}
+{% block contentBody %}
+    <div class="row"  style="background-color: mintcream">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h3> Course Assign </h3>
+            <hr>
+            <form method="get">
+                {% csrf_token %}
+                Teacher {{ form.emp_Id_Fk }}<br>
+                Syllabus {{ form.courseAssignTeacher_syllabus_Id_Fk }}<br>
+                Course Code {{ form.courseAssignTeacher_course_Id_Fk }}<br>
+                <button type="submit" class="btn btn-success">Save</button>
+                <br>
+                <br>
+                <br>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <br>
+    <div class="row"  style="background-color: mintcream">
+        <div class="col-md-12">
+            <table class="table table-info">
+                <thead>
+                <tr>
+                    <th>Teacher</th>
+                    <th>Course Code</th>
+                    <th>Syllabus</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for teacherAssignDetail in teacherAssignDetails %}
+                    <tr>
+                        <td>
+                            {{ teacherAssignDetail.emp_Id_Fk }}
+                        </td>
+                        <td>
+                            {{ teacherAssignDetail.courseAssignTeacher_course_Id_Fk }}
+                        </td>
+                        <td>
+                            {{ teacherAssignDetail.courseAssignTeacher_syllabus_Id_Fk }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+{% endblock %}

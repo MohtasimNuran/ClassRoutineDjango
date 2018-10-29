@@ -1,0 +1,32 @@
+{% extends 'masterPage.html' %}
+
+{% block contentHead %}
+    Class Ending Date
+{% endblock %}
+
+{% block contentBody %}
+    <div>
+    <h3 style="text-align: center">Class Endind Date</h3>
+    <hr>
+        <table class="table table-bordered table-active" style="background-color: pink">
+            <thead>
+            <tr>
+                <th>Exam Code</th>
+                <th>Starting Date</th>
+                <th>Ending Date</th>
+                <th>Class Held</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for e in endClassList %}
+                <tr>
+                    <td>{{ e.exam_Id_FK }}</td>
+                    <td>{{ e.startingDate }}</td>
+                    <td>{{ e.endingDate }}</td>
+                    <td>{{ e.classHeldWeek }} weeks</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

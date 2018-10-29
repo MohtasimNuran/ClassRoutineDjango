@@ -1,0 +1,30 @@
+{% extends "masterPage.html" %}
+{% block contentHead %}
+    Add Employee
+{% endblock %}
+{% block contentBody %}
+    <div class="row" style="background-color: mintcream">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h3> Add Employee </h3>
+            <hr>
+            <form method="get">
+                {% csrf_token %}
+                Full Name : {{ form.emp_fullName }}<br>
+                Short Name : {{ form.emp_shortForm }}<br>
+                Password : {{ form.emp_password }}<br>
+                Type : {{ form.emp_type }}<br>
+                Designation : {{ form.emp_designation }}<br>
+                Priority : {{ form.emp_priority }}<br>
+                Link : {{ form.emp_link }}<br>
+                <button type="submit" class="btn btn-success">Save</button>
+                <br>
+                <br>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+
+{% endblock %}
+

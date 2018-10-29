@@ -1,0 +1,26 @@
+{% extends 'masterPage.html' %}
+
+{% block contentHead %}
+    Log In
+{% endblock %}
+
+{% block contentBody %}
+    <div class="row" style="background-color: mintcream">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h3> Login Employee </h3>
+            <hr>
+            <form type="get">
+                {% csrf_token %}
+                Short Form <input type="text" name="shortForm" required class="form-control"><br>
+                Password <input type="password" name="password" required class="form-control"><br>
+
+                <button type="submit" class="btn btn-success">Login</button>
+                <br>
+                <br>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+{% endblock %}

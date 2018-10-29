@@ -1,0 +1,1702 @@
+{% extends "masterPage.html" %}
+{% block contentHead %}
+    Select Routine
+
+{% endblock %}
+
+
+
+{% block contentBody %}
+    {% if request.session.routine == 'visible' %}
+        <div class="row" style="background-color: mintcream">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <h3> Select Routine </h3>
+                <hr>
+
+                <form method="get">
+                    {% csrf_token %}
+                    {#                Assigned Teacher#}
+                    {#                <select name="assignedTeacher" class="form-control" required>#}
+                    {#                    <option value="">...Select Teacher...</option>#}
+                    {#                    {% for d in teacherList %}#}
+                    {#                        <option value="{{ d.emp_Id_Fk.emp_Id }}">{{ d.emp_Id_Fk.emp_shortForm }}</option>#}
+                    {#                    {% endfor %}#}
+                    {#                </select>#}
+                    Course
+                    <select name="course" class="form-control" required>
+                        <option value="">...Select Time...</option>
+                        {% for d in courseList %}
+                            <option value="{{ d.courseAssignTeacher_course_Id_Fk.id }}">{{ d.courseAssignTeacher_course_Id_Fk.course_code }}</option>
+                        {% endfor %}
+                    </select>
+                    Class Time
+                    <select name="classTime" class="form-control" required>
+                        <option value="">...Select Time...</option>
+                        {% for d in timeList %}
+                            <option value="{{ d.time_Id }}">{{ d.time_period }}</option>
+                        {% endfor %}
+                    </select>
+                    Room
+                    <select name="room" class="form-control" required>
+                        <option value="">...Select Room...</option>
+                        {% for d in roomList %}
+                            <option value="{{ d.room_Id }}">{{ d.room_number }}</option>
+                        {% endfor %}
+                    </select>
+                    Day of Week
+                    <select name="days" class="form-control" required>
+                        <option value="">...Select Room...</option>
+                        <option value="Sat">Saturday</option>
+                        <option value="Sun">Sunday</option>
+                        <option value="Mon">Monday</option>
+                        <option value="Tues">Tuesday</option>
+                        <option value="Wed">Wednesday</option>
+                        <option value="Thurs">Thursday</option>
+                        <option value="Fri">Friday</option>
+                    </select>
+                    <br>
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <a href="/routine/priorityNext" class="btn btn-danger">Pass to Next</a>
+                    <br>
+                    <br>
+
+                </form>
+            </div>
+            <div class="col-md-4">
+                <h3> Assigned Course </h3>
+                <hr>
+                <table class="table table-info">
+                    <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Taken</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in courseListTableCount %}
+                            <tr>
+                                <td>{{ c.course_Id_Fk__course_code }}</td>
+                                <td>{{ c.the_count }}</td>
+                            </tr>
+                            </tbody>
+                    {% endfor %}
+                </table>
+
+
+            </div>
+        </div>
+    {% endif %}
+    {% if request.session.routine == 'not visible' %}
+        {% if editingTurn %}
+            <h3 style="text-align: center; color: red">{{ editingTurn }}
+                is making routine now</h3>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+
+<br>
+{% block contentOutContainer %}
+
+
+    <div class="row" style="background-color: mintcream; padding-left: -100px">
+        <div class="col-md-12">
+
+
+            {% load define_action %}
+
+            <table class="table table-bordered table-responsive">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>9.00am-10.20am</td>
+                    <td>10.20am-11.25am</td>
+                    <td>11.25am-1.00pm</td>
+                    <td>2.00pm-4.00pm</td>
+                </tr>
+                <tr>
+                    <td>Saturday</td>
+                    <td>
+                        <table class="table table-responsive table-border table-hover">
+                            <tr>
+                                <td>Room-101</td>
+                            </tr>
+                            <tr>
+                                <td>Room-102</td>
+                            </tr>
+                            <tr>
+                                <td>Room-103</td>
+                            </tr>
+                            <tr>
+                                <td>Room-104</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    {% with 0 as abc %}
+
+                                        {% for foo in fullRoutine %}
+                                            {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 1 and foo.dayOfWeek == 'Sat' %}
+                                                {{ foo.course_Id_Fk }}-{{ foo.assignedTeacher_Fk }}
+                                                {% update_variable 1 as abc %}
+                                            {% endif %}
+
+                                        {% endfor %}
+                                        {#                            {% if var == 0 %}#}
+                                        {#                                N/A#}
+                                        {#                            {% endif %}#}
+                                        {{ abc }}
+                                    {% endwith %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td{% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    {% for foo in fullRoutine %}
+                                        {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 1 and foo.dayOfWeek == 'Sat' %}
+                                            {{ foo.course_Id_Fk }}-{{ foo.assignedTeacher_Fk }}
+                                        {% else %}
+                                            &nbsp
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                {% update_variable "green" as color %}
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            {#                                class="red"#}
+                                            {% update_variable "red" as color %}
+                                        {% endifequal %}
+                                    {% endif %}
+
+                                {% endfor %} class={{ color }}>
+                                    CSE-103(ASMMR)
+                                </td>
+                                {#                    {% endwith %}#}
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+                                    {% else %}
+                                            class="green"
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-104(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-105(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-106(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-110(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-111(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-121(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Sat' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sunday</td>
+                    <td>
+                        <table class="table table-responsive table-border table-hover">
+                            <tr>
+                                <td>Room-101</td>
+                            </tr>
+                            <tr>
+                                <td>Room-102</td>
+                            </tr>
+                            <tr>
+                                <td>Room-103</td>
+                            </tr>
+                            <tr>
+                                <td>Room-104</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 1  and foo.dayOfWeek == 'Sun' %}
+                                        class="red"
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td{% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-102(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-103(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-104(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-105(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-106(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-110(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-111(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-121(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Sun' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Monday</td>
+                    <td>
+                        <table class="table table-responsive table-border table-hover">
+                            <tr>
+                                <td>Room-101</td>
+                            </tr>
+                            <tr>
+                                <td>Room-102</td>
+                            </tr>
+                            <tr>
+                                <td>Room-103</td>
+                            </tr>
+                            <tr>
+                                <td>Room-104</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td{% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-102(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-103(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-104(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-105(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-106(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-110(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-111(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-121(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Mon' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Tuesday</td>
+                    <td>
+                        <table class="table table-responsive table-border table-hover">
+                            <tr>
+                                <td>Room-101</td>
+                            </tr>
+                            <tr>
+                                <td>Room-102</td>
+                            </tr>
+                            <tr>
+                                <td>Room-103</td>
+                            </tr>
+                            <tr>
+                                <td>Room-104</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td{% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-102(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-103(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-104(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-105(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-106(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-110(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-111(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-121(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Tues' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Wednesday</td>
+                    <td>
+                        <table class="table table-responsive table-border table-hover">
+                            <tr>
+                                <td>Room-101</td>
+                            </tr>
+                            <tr>
+                                <td>Room-102</td>
+                            </tr>
+                            <tr>
+                                <td>Room-103</td>
+                            </tr>
+                            <tr>
+                                <td>Room-104</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td{% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-102(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-103(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-104(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-105(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-106(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-110(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-111(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-121(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Wed' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Thursday</td>
+                    <td>
+                        <table class="table table-responsive table-border table-hover">
+                            <tr>
+                                <td>Room-101</td>
+                            </tr>
+                            <tr>
+                                <td>Room-102</td>
+                            </tr>
+                            <tr>
+                                <td>Room-103</td>
+                            </tr>
+                            <tr>
+                                <td>Room-104</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td{% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-102(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-103(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-104(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-105(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-106(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-110(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-111(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-121(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Thurs' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Friday</td>
+                    <td>
+                        <table class="table table-responsive table-border table-hover">
+                            <tr>
+                                <td>Room-101</td>
+                            </tr>
+                            <tr>
+                                <td>Room-102</td>
+                            </tr>
+                            <tr>
+                                <td>Room-103</td>
+                            </tr>
+                            <tr>
+                                <td>Room-104</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td{% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-102(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-103(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 1 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-104(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-105(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-106(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 2 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-110(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-111(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 3 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>
+                                    CSE-121(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 1 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 2 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 3 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td {% for foo in fullRoutine %}
+                                    {% if foo.classRoom_Id_Fk_id == 4 and foo.classTime_Id_Fk_id == 4 %}
+                                        {% ifequal foo.dayOfWeek 'Fri' %}
+                                            class="red"
+                                        {% endifequal %}
+
+                                    {% endif %}
+                                {% endfor %}>CSE-101(ASMMR)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}

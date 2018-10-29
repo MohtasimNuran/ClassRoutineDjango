@@ -1,0 +1,56 @@
+{% extends 'masterPage.html' %}
+
+{% block contentHead %}
+    Employee List
+{% endblock %}
+
+{% block contentBody %}
+    <div style="background-color: mintcream">
+        <br>
+        <h3>Teacher List</h3>
+        <hr>
+        <table class="table table-info">
+            <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Short Form</th>
+                <th>Designation</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for t in teacherList %}
+                <tr>
+                    <th><a href="{{ t.emp_link }}">{{ t.emp_fullName }}</a></th>
+                    <th>{{ t.emp_shortForm }}</th>
+                    <th>{{ t.emp_designation }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <br>
+    <div style="background-color: mintcream">
+        <br>
+        <h3>Staff List</h3>
+        <hr>
+        <table class="table table-info">
+            <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Short Form</th>
+                <th>Designation</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for t in staffList %}
+                <tr>
+                    <th> {{ t.emp_fullName }}</th>
+                    <th>{{ t.emp_shortForm }}</th>
+                    <th>{{ t.emp_designation }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

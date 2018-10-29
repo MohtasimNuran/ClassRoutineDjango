@@ -1,0 +1,55 @@
+{% extends 'masterPage.html' %}
+
+{% block contentHead %}
+    Add Room
+{% endblock %}
+
+{% block contentBody %}
+    {% if request.session.username and request.session.type == 'Staff' %}
+        <div style="background-color: mintcream">
+            <hr>
+            <h3> Add Room </h3>
+            <hr>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <form method="get">
+                        Starting Date
+                        <select class="form-control" name="type">
+                            <option value="">...Select Type...</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Computer lab">Computer lab</option>
+                            <option value="Electronics lab">Electronics lab</option>
+                        </select>
+                        Room Number
+                        <input type="text" class="form-control" required name="roomNumber"><br>
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <br>
+                        <br>
+                    </form>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+    {% endif %}
+
+    <br>
+    <div style="background-color: mintcream">
+        <table class="table table-info">
+            <thead>
+            <tr>
+                <th>Room Type</th>
+                <th>Room Number</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for r in roomList %}
+                <tr>
+                    <td>{{ r.room_type }}</td>
+                    <td>{{ r.room_number }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

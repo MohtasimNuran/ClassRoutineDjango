@@ -1,0 +1,38 @@
+{% extends "masterPage.html" %}
+{% block contentHead %}
+    Calculate Ending Date
+{% endblock %}
+{% block contentBody %}
+    <div class="row" style="background-color: mintcream">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h3> Class Ending Date </h3>
+            <hr>
+            {#            <form method="get">#}
+            {#                Exam Code {{ form.exam_Id_FK }}<br>#}
+            {#                Starting Date {{ form.startingDate }} <br>#}
+            {#                Week {{ form.classHeldWeek }}<br>#}
+            {#                <button type="submit" class="btn btn-success">Save</button>#}
+            {#                <br>#}
+            {#                <br>#}
+            {#            </form>#}
+            <form method="get">
+                Exam Code <select name="exam" class="form-control" required>
+                <option value="">...Select Exam...</option>
+                {% for d in examList %}
+                    <option value="{{ d.exam_Id }}">{{ d.exam_code }}</option>
+                {% endfor %}
+            </select>
+                </select><br>
+                Starting Date <input type="date" class="form-control" name="startDate"> <br>
+                Week <input type="text" class="form-control" name="week" value="13"> <br>
+
+                <button type="submit" class="btn btn-success">Save</button>
+                <br>
+                <br>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+{% endblock %}

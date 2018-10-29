@@ -1,0 +1,57 @@
+{% extends 'masterPage.html' %}
+
+{% block contentHead %}
+    Add Holiday
+{% endblock %}
+
+{% block contentBody %}
+    {% if request.session.username and request.session.type == 'Staff' %}
+        <div style="background-color: mintcream">
+
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <hr>
+                    <h3> Add Holiday </h3>
+                    <hr>
+                    <form method="get">
+                        Starting Date
+                        <input type="date" class="form-control" required name="startDate"><br>
+                        Ending Date
+                        <input type="date" class="form-control" required name="endDate"><br>
+                        Description
+                        <input type="text" class="form-control" name="description"><br>
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <br>
+                        <br>
+                    </form>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+        <br>
+    {% endif %}
+    <div style="background-color: mintcream">
+        <table class="table table-info">
+            <thead>
+            <tr>
+                <th>Starting Date</th>
+                <th>Ending Date</th>
+                <th>Days</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for r in holidayList %}
+                <tr>
+                    <td>{{ r.holidayStart_date }}</td>
+                    <td>{{ r.holidayEnd_date }}</td>
+                    <td>{{ r.holidayInDays }}</td>
+                    <td>{{ r.holiday_description }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

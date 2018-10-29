@@ -1,0 +1,56 @@
+{% extends 'masterPage.html' %}
+
+{% block contentHead %}
+    Student List
+{% endblock %}
+{% block contentBody %}
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form type="get">
+                Session
+                <select name="session" class="form-control" required>
+                    <option value="">...Select Time...</option>
+                    <option value="2012-13">2012-13</option>
+                    <option value="2013-14">2013-14</option>
+                    <option value="2014-15">2014-15</option>
+                    <option value="2015-16">2015-16</option>
+                    <option value="2016-17">2017-18</option>
+                    <option value="2017-18">2018-19</option>
+                </select>
+                <br>
+                <button type="submit" class="btn btn-success">Search</button>
+                <br>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <br>
+    <br>
+    <table class="table table-info">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Roll</th>
+            <th>Exam Roll</th>
+            <th>Reg No.</th>
+            <th>Hall</th>
+            <th>Phone</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for s in studentList %}
+            <tr>
+                <td>{{ s.std_fullName }}</td>
+                <td>{{ s.std_classRoll }}</td>
+                <td>{{ s.std_examRoll }}</td>
+                <td>{{ s.std_registrationNumber }}</td>
+                <td>{{ s.std_hall }}</td>
+                <td>{{ s.std_phone }}</td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{% block contentHead %}
+    {% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% load static %}
+
+    <link href="{% static 'cusomContent/w3.css' %}" rel="stylesheet"/>
+    <link href="{% static 'cusomContent/bootstrap.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'cusomContent/jquery.min.js' %}"></script>
+    <script src="{% static 'cusomContent/bootstrap.min.js' %}"></script>
+    <style>
+        {#        td {#}
+        {#        background-color: #04804f;#}
+        {#    }#}
+        .red {
+            background-color: #66afe9;
+            color: white
+        }
+
+        .green {
+            background-color: #04804f;
+            color: white
+        }
+
+        .footer {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1rem;
+            background-color: #efefef;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!--Ju Logo and Contact-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 style="font-weight: bold; color: #4574bf" class="w3-animate-zoom">Department of Computer Science and
+                Engineering</h2>
+            <img src="{% static 'images/juLogo.png' %}" height="60px"/>
+        </div>
+        {#        <div class="col-md-3"></div>#}
+        <div class="col-md-3"></div>
+        <div class="col-md-3" style="text-align: right">
+            <br/>
+            <a href="http://www.juniv.edu/">office.cse@juniv.edu</a>
+            <br/><br/>
+            880-2-7791045-51 || Fax: 880-2-7791052 || registrar@juniv.edu
+        </div>
+    </div>
+</div>
+<!--End Ju Logo and Contact-->
+<!-- Navbar Start-->
+<nav class="navbar navbar-default w3-animate-left" id="up">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">CSE ERP</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Employee<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if request.session.username and request.session.type == 'Staff' %}
+                            <li><a href="/employee/add/">Add Employee</a></li>
+                            <li><a href="/employee/courseassign/">Course Assign to Teacher</a></li>
+                            <li><a href="/employee/activeRoutine/">Active Routine</a></li>
+                        {% endif %}
+                        <li><a href="/employee/employeeList/">Employee List</a></li>
+                    </ul>
+                </li>
+                {% if request.session.username %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student<span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% if request.session.type == 'Staff' %}
+                                <li><a href="/student/add/">Add Student</a></li>
+                                <li><a href="/student/courseenroll/">Course Enrollment</a></li>
+                                <li><a href="/student/studentList">View Students</a></li>
+                            {% endif %}
+                            {% if request.session.type == 'Teacher' %}
+                                <li><a href="/student/studentList">View Students</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Class Routine<span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if request.session.username and request.session.type == 'Teacher' %}
+                            <li><a href="/routine/routine/">Add Routine</a></li>
+                            <li><a href="/routine/myRoutine/">My Routine</a></li>
+                            {#                            <li><a href="/routine/routine">View Full Routine</a></li>#}
+                        {% endif %}
+                        <li><a href="/routine/fullRoutine">View Full Routine</a></li>
+                        <li><a href="/routine/routineByYear/?semester=1">View Routine by Semester</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Class Ending Date<span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if request.session.username and request.session.type == 'Staff' %}
+                            <li><a href="/routine/calculatedate/">Calculate Date</a></li>
+                        {% endif %}
+                        <li><a href="/routine/endClassList/">View Class Ending Date</a></li>
+                    </ul>
+                </li>
+                {#                {% if request.session.username and request.session.type == 'Staff' %}#}
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Time | Room | Holiday<span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/others/addRoom/">Room</a></li>
+                        <li><a href="/others/addTime/">Time</a></li>
+                        <li><a href="/others/addHoliday">Holiday</a></li>
+                    </ul>
+                </li>
+                {#                {% endif %}#}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.session.username %}
+                    <li><a href="/student/update"><span class="glyphicon glyphicon-user"></span>
+                        Hello {{ request.session.username }}</a>
+                    </li>
+                    <li>
+                        <a href="/employee/logout"><span class="glyphicon glyphicon-log-in"></span> Log out</a>
+                    </li>
+                {% endif %}
+                {% if not request.session.username %}
+                    <li><a href="/employee/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="w3-animate-right" style="background-color: #4CAF50; height: 8px; margin-top: -20px"></div>
+<!-- End Navbar-->
+<div>
+    {% block contentForIndex %}
+
+    {% endblock %}
+</div>
+
+<div class="container">
+    <br>
+    {% block contentBody %}
+
+    {% endblock %}
+</div>
+
+<div class="container-fluid">
+    {% block contentOutContainer %}
+
+    {% endblock %}
+</div>
+
+{#<div style="background-color: #111e33; color: white; margin-top: 0px;" class="container-fluid">#}
+{#    <br/>#}
+{#    <br/>#}
+{##}
+{#    <div class="row">#}
+{#        <div class="col-md-4"><p>#}
+{#            <a href="http://www.juniv.edu/">Jahanginagar University</a>#}
+{#        </p>#}
+{#            <p>#}
+{#                <a href="">Teacher of Jahanginagar University</a>#}
+{#            </p>#}
+{#            <p>#}
+{#                <a href="">Admission Jahangirnagar University</a>#}
+{#            </p></div>#}
+{#        <div class="col-md-4">#}
+{#            <p>#}
+{#                <a href="http://www.juniv.edu/">CSE Alumnia</a>#}
+{#            </p>#}
+{#            <p>#}
+{#                <a href="">Alumnia Website</a>#}
+{#            </p>#}
+{#            <p>#}
+{#                <a href="">Admission</a>#}
+{#            </p>#}
+{#        </div>#}
+{#        <div class="col-md-4">#}
+{#            <p>#}
+{#                <a href="http://www.juniv.edu/">Jahanginagar University</a>#}
+{#            </p>#}
+{#            <p>#}
+{#                <a href="">Teacher of Jahanginagar University</a>#}
+{#            </p>#}
+{#            <p>#}
+{#                <a href="">Admission Jahangirnagar University</a>#}
+{#            </p>#}
+{#        </div>#}
+{##}
+{#    </div>#}
+{#    <br/>#}
+{#    <br/>#}
+{#</div>#}
+
+</body>
+</html>

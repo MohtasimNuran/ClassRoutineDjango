@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        Level : <select name="levelDrop" onChange="submit()">
+        <option value={{ form.level_Id }}</option>
+    </select><br>
+        Syllabus year : {{ form.syl_Id }}<br>
+        <br>
+        <hr>
+        <br>
+        Semester : <select name="semDrop">
+        <option value="">...Select Semester...</option>
+        {% for s in semesters %}
+            <option value="{{ s.semester_name }}">{{ s.semester_name }}</option>
+        {% endfor %}
+    </select><br>
+        <br>
+        Course Code :{{ form.course_code }}<br>
+        Course Name : {{ form.course_name }}<br>
+        Course Credit : {{ form.course_credit }}<br>
+
+        <button type="submit" class="button">Save</button>
+        <br>
+    </form>
+{% endblock %}
